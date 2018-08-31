@@ -1,4 +1,4 @@
-package com.jamesbown.collabretron.config;
+package com.jamesbown.retron.config;
 
 
 import org.springframework.context.annotation.Configuration;

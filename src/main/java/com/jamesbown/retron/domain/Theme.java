@@ -1,4 +1,4 @@
-package com.jamesbown.collabretron.domain;
+package com.jamesbown.retron.domain;
 
 import java.util.Set;
 

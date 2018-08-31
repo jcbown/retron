@@ -1,4 +1,4 @@
-package com.jamesbown.collabretron;
+package com.jamesbown.retron;
 
 /**
  * This class represents the different phases of the retrospective. We will progress through them in order.

@@ -1,6 +1,6 @@
-package com.jamesbown.collabretron.dao;
+package com.jamesbown.retron.dao;
 
-import com.jamesbown.collabretron.domain.Card;
+import com.jamesbown.retron.domain.Card;
 import org.springframework.stereotype.Repository;
 
 import java.util.Collections;

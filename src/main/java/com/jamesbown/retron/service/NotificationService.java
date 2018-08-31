@@ -1,6 +1,6 @@
-package com.jamesbown.collabretron.service;
+package com.jamesbown.retron.service;
 
-import com.jamesbown.collabretron.domain.Notification;
+import com.jamesbown.retron.domain.Notification;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;

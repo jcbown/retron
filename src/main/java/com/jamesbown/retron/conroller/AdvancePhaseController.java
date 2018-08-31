@@ -1,10 +1,9 @@
-package com.jamesbown.collabretron.conroller;
+package com.jamesbown.retron.conroller;
 
-import com.jamesbown.collabretron.AdvancePhaseMessage;
-import com.jamesbown.collabretron.dao.CardDAO;
-import com.jamesbown.collabretron.domain.Card;
-import com.jamesbown.collabretron.domain.Notification;
-import com.jamesbown.collabretron.service.NotificationService;
+import com.jamesbown.retron.dao.CardDAO;
+import com.jamesbown.retron.domain.Card;
+import com.jamesbown.retron.domain.Notification;
+import com.jamesbown.retron.service.NotificationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;

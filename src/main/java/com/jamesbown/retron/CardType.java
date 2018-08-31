@@ -1,4 +1,4 @@
-package com.jamesbown.collabretron;
+package com.jamesbown.retron;
 
 public enum CardType {
     GOOD,

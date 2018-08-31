@@ -1,6 +1,6 @@
-package com.jamesbown.collabretron.domain;
+package com.jamesbown.retron.domain;
 
-import com.jamesbown.collabretron.CardType;
+import com.jamesbown.retron.CardType;
 
 public class Card {
 
