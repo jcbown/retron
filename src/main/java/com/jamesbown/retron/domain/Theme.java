@@ -1,16 +1,14 @@
 package com.jamesbown.retron.domain;
 
-import java.util.Set;
+import com.jamesbown.retron.domain.Card;
+
+import java.util.List;
 
 public class Theme {
 
-    private Set<Card> cards;
+    private List<Card> cards;
 
-    public Theme(Set<Card> cards) {
+    public Theme(List<Card> cards) {
         this.cards = cards;
-    }
-
-    public Set<Card> getCards() {
-        return cards;
     }
 }

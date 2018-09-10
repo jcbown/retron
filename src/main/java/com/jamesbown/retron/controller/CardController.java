@@ -1,4 +1,4 @@
-package com.jamesbown.retron.conroller;
+package com.jamesbown.retron.controller;
 
 import com.jamesbown.retron.dao.CardDAO;
 import com.jamesbown.retron.domain.Card;
@@ -18,7 +18,7 @@ public class CardController {
 
     @MessageMapping("/card/create")
     public void createCard(Card card) throws Exception {
-        this.cardDAO.addCard(card);
+        this.cardDAO.createCard(card);
     }
 
 }
