@@ -1,3 +1,5 @@
+import App from '/component/app.js'
+
 let stompClient;
 
 function connect() {
@@ -72,19 +74,17 @@ function userJoin() {
     stompClient.send("/app/user/join", {user: "James Bown"}, JSON.stringify(user));
 }
 
-function prepareCarousel() {
-    $('.carousel').carousel({
-        pause: true
+
+function setupVue() {
+    var vm = new Vue({
+        el: '#app',
+        components: {
+            App
+        }
     });
 }
 
-function setupPage() {
-    Vue.component('home', {});
-    var home = new Vue({});
-}
-
-setupPage();
-connect();
-prepareCarousel();
+setupVue();
+// connect();
 
 

@@ -11,4 +11,8 @@ public class Theme {
     public Theme(List<Card> cards) {
         this.cards = cards;
     }
+
+    public List<Card> getCards() {
+        return cards;
+    }
 }

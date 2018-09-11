@@ -26,6 +26,10 @@ public class Card {
         this.owner = owner;
     }
 
+    public UUID getUuid() {
+        return uuid;
+    }
+
     public String getText() {
         return text;
     }
