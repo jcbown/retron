@@ -5,6 +5,7 @@ import com.jamesbown.retron.domain.Card;
 import org.springframework.stereotype.Repository;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Repository
 public class CardDAO {
@@ -18,6 +19,12 @@ public class CardDAO {
 
     public List<Card> getCards() {
         return this.cards;
+    }
+
+    public List<Card> getCardsForOwner(String owner) {
+        return this.cards.stream()
+                .filter(c -> c.getOwner().equals(owner))
+                .collect(Collectors.toList());
     }
 
     public List<Theme> createThemesFromCards() {

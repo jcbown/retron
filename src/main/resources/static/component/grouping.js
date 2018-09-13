@@ -8,7 +8,7 @@ export default {
             
         </div>
     `,
-    props: [],
+    props: ["details"],
     data: function () {
         return {
 

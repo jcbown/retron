@@ -10,7 +10,7 @@ export default {
                     <form onsubmit="return false;">
                         <div class="form-group">
                             <label for="fullName">Full Name</label>
-                            <input type="text" class="form-control" id="fullName" placeholder="Enter your first name and second name">
+                            <input type="text" class="form-control" id="fullName" placeholder="Enter your first and second name">
                         </div>
                         <div class="form-group">
                             <label for="initials">Initials</label>

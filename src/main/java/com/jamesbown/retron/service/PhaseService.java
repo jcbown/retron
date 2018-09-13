@@ -1,6 +1,7 @@
 package com.jamesbown.retron.service;
 
 import com.jamesbown.retron.*;
+import com.jamesbown.retron.config.WebSocketPrincipalHolder;
 import com.jamesbown.retron.dao.CardDAO;
 import com.jamesbown.retron.dao.PhaseDAO;
 import com.jamesbown.retron.dao.ThemeDAO;
@@ -20,6 +21,9 @@ public class PhaseService {
 
     @Autowired
     private SimpMessagingTemplate template;
+
+    @Autowired
+    private WebSocketPrincipalHolder principalHolder;
 
     @Autowired
     private CardDAO cardDAO;
@@ -57,31 +61,32 @@ public class PhaseService {
                 break;
             case ACTIONS:
             default:
-                throw new IllegalStateException("Should not be possible to reach this point");
+                break; // do nothing
         }
     }
 
-    public void sendCurrentPhaseToUser(User user) {
+    public void sendCurrentPhaseToUser() {
+        String username = principalHolder.getPrincipal().getName();
         switch (phaseDAO.getCurrentPhase()) {
             case SUBMISSION:
-                SubmissionPhaseMessage spm = new SubmissionPhaseMessage(cardDAO.getCards());
-                this.template.convertAndSendToUser(user.getId(), "/topic/phase/submission", spm);
+                SubmissionPhaseMessage spm = new SubmissionPhaseMessage(cardDAO.getCardsForOwner(username));
+                this.template.convertAndSendToUser(username, "/topic/phase/submission", spm);
                 break;
             case DISCUSSION:
                 DiscussionPhaseMessage dpm = new DiscussionPhaseMessage(cardDAO.getCards(), cardDAO.getCurrentCardIndex());
-                this.template.convertAndSendToUser(user.getId(), "/topic/phase/discussion", dpm);
+                this.template.convertAndSendToUser(username, "/topic/phase/discussion", dpm);
                 break;
             case GROUPING:
                 GroupingPhaseMessage gpm = new GroupingPhaseMessage(cardDAO.getCards());
-                this.template.convertAndSendToUser(user.getId(), "/topic/phase/grouping", gpm);
+                this.template.convertAndSendToUser(username, "/topic/phase/grouping", gpm);
                 break;
             case VOTING:
                 VotingPhaseMessage vpm = new VotingPhaseMessage(themeDAO.getThemes());
-                this.template.convertAndSendToUser(user.getId(), "/topic/phase/voting", vpm);
+                this.template.convertAndSendToUser(username, "/topic/phase/voting", vpm);
                 break;
             case ACTIONS:
                 ActionsPhaseMessage apm = new ActionsPhaseMessage(themeDAO.getThemes());
-                this.template.convertAndSendToUser(user.getId(), "/topic/phase/actions", apm);
+                this.template.convertAndSendToUser(username, "/topic/phase/actions", apm);
                 break;
         }
     }

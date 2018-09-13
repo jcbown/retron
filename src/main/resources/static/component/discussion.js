@@ -31,12 +31,14 @@ export default {
             </div>
         </div>
     `,
-    props: [],
+    props: ["details"],
     data: function () {
-        return {}
+        return {
+            cards: []
+        }
     },
     created: function () {
-
+        this.cards = this.details.cards;
     },
     methods: {
         func: function () {

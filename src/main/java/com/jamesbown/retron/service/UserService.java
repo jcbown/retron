@@ -44,6 +44,6 @@ public class UserService {
             userDAO.createUser(user);
             notificationService.notifyClient(new Notification(user.getFullName() + " has joined the game!"));
         }
-        phaseService.sendCurrentPhaseToUser(user);
+        phaseService.sendCurrentPhaseToUser();
     }
 }
