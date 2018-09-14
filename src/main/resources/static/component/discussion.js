@@ -2,47 +2,39 @@ export default {
     components: {},
     // language=HTML
     template: `
-        <div>
-            Discussion time is upon us
-            <div id="carousel" class="carousel slide" data-ride="carousel">
-                <div class="carousel-inner">
-                    <div class="carousel-item active">
-                        <h3>James Bown</h3>
-                        <h4>Good</h4>
-                        <p>My text for this card is this</p>
-                    </div>
-                    <div class="carousel-item">
-                        no more
-                    </div>
-                    <div class="carousel-item">
-                        no more
+        <div class="row">
+            <div v-for="cardType in cardTypes" class="col">
+                <h3>{{cardType}}</h3>
+                <div v-for="card in getCards(cardType)" class="card mb-2" :class="{highlightedCard : shouldHighlight(card)}">
+                    <div class="card-body">
+                        <span>{{card.text}}</span>
+                        <span class="float-right" width="20rem">
+                            <a href="javascript:void(0)" class="badge badge-primary">{{card.owner}}</a>
+                        </span>
                     </div>
                 </div>
-                <a class="carousel-control-prev" href="#carouselExampleControls" role="button"
-                   data-slide="prev">
-                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                    <span class="sr-only">Previous</span>
-                </a>
-                <a class="carousel-control-next" href="#carouselExampleControls" role="button"
-                   data-slide="next">
-                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                    <span class="sr-only">Next</span>
-                </a>
             </div>
         </div>
     `,
     props: ["details"],
     data: function () {
         return {
-            cards: []
+            cardsByOwner: [],
+            currentOwner: 0,
+            cardTypes: []
         }
     },
     created: function () {
-        this.cards = this.details.cards;
+        this.cardsByOwner = this.details.cardsByOwner;
+        this.currentOwner = this.details.currentOwner;
+        this.cardTypes = this.$cardTypes;
     },
     methods: {
-        func: function () {
-
+        getCards: function(cardType) {
+            return this.cardsByOwner[this.currentOwner].cards;
+        },
+        shouldHighlight: function (card) {
+            return true;
         }
     }
 }

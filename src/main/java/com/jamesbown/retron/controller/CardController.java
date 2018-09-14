@@ -14,8 +14,13 @@ public class CardController {
     private CardService cardService;
 
     @MessageMapping("/card/create")
-    public void createCard(Card card) throws Exception {
+    public void createCard(Card card) {
         this.cardService.createCard(card);
+    }
+
+    @MessageMapping("/card/update")
+    public void updateCard(Card card) {
+        this.cardService.updateCard(card);
     }
 
 }

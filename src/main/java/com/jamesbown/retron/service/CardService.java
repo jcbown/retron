@@ -32,4 +32,7 @@ public class CardService {
     }
 
 
+    public void updateCard(Card card) {
+        cardDAO.updateCard(card);
+    }
 }

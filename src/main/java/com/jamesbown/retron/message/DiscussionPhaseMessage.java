@@ -1,28 +1,29 @@
 package com.jamesbown.retron.message;
 
 import com.jamesbown.retron.domain.Card;
+import com.jamesbown.retron.domain.OwnedCards;
 
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.util.List;
+import java.util.Map;
 
 public class DiscussionPhaseMessage {
 
 
-    private List<Card> cards;
+    private List<OwnedCards> cardsByOwner;
+    private int currentOwner;
 
-    private int currentCardIndex;
-
-    public DiscussionPhaseMessage(List<Card> cards, int currentCardIndex) {
-        this.cards = cards;
-        this.currentCardIndex = currentCardIndex;
+    public DiscussionPhaseMessage(List<OwnedCards> cardsByOwner, int currentOwner) {
+        this.cardsByOwner = cardsByOwner;
+        this.currentOwner = currentOwner;
     }
 
-    public List<Card> getCards() {
-        return cards;
+    public List<OwnedCards> getCardsByOwner() {
+        return cardsByOwner;
     }
 
-    public int getCurrentCardIndex() {
-        return currentCardIndex;
+    public int getCurrentOwner() {
+        return currentOwner;
     }
 }

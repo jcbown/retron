@@ -5,59 +5,71 @@ export default {
     // language=HTML
     template: `
         <div class="row">
-        <div v-for="cardType in cardTypes" class="col">
-            <h3>{{cardType}}</h3>
-            <div v-for="card in getCards(cardType)">
-                {{card.text}}
+            <div v-for="cardType in cardTypes" class="col">
+                <h3>{{cardType}}</h3>
+                <div v-for="card in getCards(cardType)" class="card mb-2" @dblclick="editCard(card)">
+                    <div class="card-body">
+                        <input v-if="isEditing(card)" @keyup.enter="saveCard(card, $event)" @blur="saveCard(card, $event)" type="text" :value="card.text" size="30">
+                        <span v-else>{{card.text}}</span>
+                        <span class="float-right" width="20rem">
+                            <a href="javascript:void(0)" class="badge badge-primary">{{card.owner}}</a>
+                        </span>
+                    </div>
+                </div>
+                <button type="button" class="btn"
+                        :class="addCardButtonClasses"
+                        @click="createCard(cardType)">Add Card
+                </button>
             </div>
-            <button type="button" class="btn btn-primary"
-                    @click="addCard(cardType)">Add Card
-            </button>
-        </div>
-        <!--<div>-->
-            <!--<table class="table">-->
-                <!--<thead>-->
-                <!--<tr>-->
-                    <!--<th>Good</th>-->
-                    <!--<th>Bad</th>-->
-                    <!--<th>Opportunity</th>-->
-                    <!--<th>Risk</th>-->
-                <!--</tr>-->
-                <!--</thead>-->
-                <!--<tbody>-->
-                <!--<tr v-for="card in cardsGood()">-->
-                    <!--<td>{{ card.text }}</td>-->
-                    <!--<td>hmm</td>-->
-                    <!--<td>hmm</td>-->
-                    <!--<td>hmm</td>-->
-                <!--</tr>-->
-                <!--</tbody>-->
-            <!--</table>-->
-        <!--</div>-->
         </div>
     `,
     props: ["details"],
     data: function () {
         return {
             cards: [],
-            cardTypes: []
+            cardTypes: [],
+            uuidCurrentlyEditing: null
         }
     },
     created: function () {
         this.cards = this.details.cards;
         this.cardTypes = this.$cardTypes;
-        this.$stompClient.subscribe("/user/topic/card/create", this.onCardAdded);
+        this.$stompClient.subscribe("/user/topic/card/create", this.onCardCreated);
+    },
+    computed: {
+        addCardButtonClasses: function () {
+            return {
+                'btn-primary': this.cards.length < 5,
+                'btn-warning': this.cards.length >=5 && this.cards.length < 7,
+                'btn-danger': this.cards.length >=7
+            }
+        }
     },
     methods: {
-        addCard: function(cardType) {
+        createCard: function(cardType) {
+            let uuid = Utils.guid();
             let card = {
-                uuid: Utils.guid(),
+                uuid: uuid,
                 cardType: cardType,
-                text: "this is the first card"
+                text: ""
             };
             this.$stompClient.send("/app/card/create", {}, JSON.stringify(card));
+            this.editCard(card);
         },
-        onCardAdded: function(msg) {
+        editCard: function(card) {
+            this.uuidCurrentlyEditing = card.uuid;
+        },
+        saveCard: function(card, e) {
+            let text = $(e.currentTarget).val();
+            card.text = text;
+            this.uuidCurrentlyEditing = null;
+            this.$stompClient.send("/app/card/update", {}, JSON.stringify(card));
+            this.uuidCurrentlyEditing = null;
+        },
+        isEditing: function(card) {
+            return this.uuidCurrentlyEditing === card.uuid;
+        },
+        onCardCreated: function(msg) {
             let card = JSON.parse(msg.body);
             this.cards.push(card);
         },

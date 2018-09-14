@@ -5,6 +5,8 @@ import com.jamesbown.retron.config.WebSocketPrincipalHolder;
 import com.jamesbown.retron.dao.CardDAO;
 import com.jamesbown.retron.dao.PhaseDAO;
 import com.jamesbown.retron.dao.ThemeDAO;
+import com.jamesbown.retron.domain.Card;
+import com.jamesbown.retron.domain.OwnedCards;
 import com.jamesbown.retron.domain.Theme;
 import com.jamesbown.retron.domain.User;
 import com.jamesbown.retron.message.*;
@@ -14,6 +16,7 @@ import org.springframework.stereotype.Service;
 
 import java.security.Principal;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class PhaseService {
@@ -39,7 +42,8 @@ public class PhaseService {
         switch (phaseDAO.getCurrentPhase()) {
             case SUBMISSION:
                 phaseDAO.setCurrentPhase(Phase.DISCUSSION);
-                DiscussionPhaseMessage dpm = new DiscussionPhaseMessage(cardDAO.getCards(), cardDAO.getCurrentCardIndex());
+                List<OwnedCards> cardsByOwner = cardDAO.getCardsByOwner();
+                DiscussionPhaseMessage dpm = new DiscussionPhaseMessage(cardsByOwner, cardDAO.getCurrentCardOwnerIndex());
                 this.template.convertAndSend("/topic/phase/discussion", dpm);
                 break;
             case DISCUSSION:
@@ -73,7 +77,7 @@ public class PhaseService {
                 this.template.convertAndSendToUser(username, "/topic/phase/submission", spm);
                 break;
             case DISCUSSION:
-                DiscussionPhaseMessage dpm = new DiscussionPhaseMessage(cardDAO.getCards(), cardDAO.getCurrentCardIndex());
+                DiscussionPhaseMessage dpm = new DiscussionPhaseMessage(cardDAO.getCardsByOwner(), cardDAO.getCurrentCardOwnerIndex());
                 this.template.convertAndSendToUser(username, "/topic/phase/discussion", dpm);
                 break;
             case GROUPING:
