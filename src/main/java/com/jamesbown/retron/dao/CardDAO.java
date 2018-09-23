@@ -12,7 +12,7 @@ import java.util.stream.Collectors;
 public class CardDAO {
 //TODO synchronization
     private final Map<UUID, Card> cards = Collections.synchronizedMap(new LinkedHashMap<>());
-    private int currentCardIndex = 0;
+    private int currentCardOwnerIndex = 0;
 
     public void createCard(Card card) {
         this.cards.put(card.getUuid(), card);
@@ -67,14 +67,24 @@ public class CardDAO {
     }
 
     public int getCurrentCardOwnerIndex() {
-        return currentCardIndex;
+        return currentCardOwnerIndex;
     }
 
-    public void setCurrentCardIndex(int currentCardIndex) {
-        this.currentCardIndex = currentCardIndex;
+    public void incrementCurrentCardOwnerIndex() {
+        long ownerCount = cards.values().stream().map(Card::getOwner).distinct().count();
+        if (this.currentCardOwnerIndex + 1 < ownerCount) {
+            this.currentCardOwnerIndex++;
+        }
+    }
+
+    public void decrementCurrentCardOwnerIndex() {
+        if (this.currentCardOwnerIndex > 0) {
+            this.currentCardOwnerIndex--;
+        }
     }
 
     public void reset() {
         cards.clear();
+        this.currentCardOwnerIndex = 0;
     }
 }

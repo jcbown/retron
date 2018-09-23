@@ -8,15 +8,9 @@ export default {
     },
     // language=HTML
     template: `
-        <div class="container-fluid">
-            <h1>retron</h1>
-
-            <div class="row">
-                <div class="col">
-                    <login v-if="!user" @logged-in="userLoggedIn"></login>
-                    <home v-if="user" :user="user"></home>
-                </div>
-            </div>
+        <div class="fullHeight">
+            <login v-if="!user" @logged-in="userLoggedIn"></login>
+            <home v-if="user" :user="user"></home>
         </div>
     `,
     props: [

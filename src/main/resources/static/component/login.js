@@ -10,11 +10,14 @@ export default {
                     <form onsubmit="return false;">
                         <div class="form-group">
                             <label for="fullName">Full Name</label>
-                            <input type="text" class="form-control" id="fullName" placeholder="Enter your first and second name">
+                            <input v-model="fullName" type="text" class="form-control" id="fullName" placeholder="Enter your first and second name">
                         </div>
                         <div class="form-group">
                             <label for="initials">Initials</label>
-                            <input type="text" class="form-control" id="initials" placeholder="Enter your initials">
+                            <input v-model="initials" type="text" class="form-control" id="initials" placeholder="Enter your initials">
+                        </div>
+                        <div>
+                            Your badge will appear like this throughout the site: <a href="javascript:void(0)" class="badge badge-primary">{{fullName}}</a>
                         </div>
                         <button @click="submit()" type="submit" class="btn btn-primary">Submit</button>
                     </form>
@@ -27,7 +30,8 @@ export default {
     ],
     data: function () {
         return {
-
+            fullName: "",
+            initials: ""
         }
     },
     created: function() {
@@ -36,8 +40,8 @@ export default {
     methods: {
         submit: function() {
             this.$emit('logged-in', {
-                fullName: $("#fullName").val(),
-                initials: $("#initials").val()
+                fullName: this.fullName,
+                initials: this.initials
             });
         }
     }

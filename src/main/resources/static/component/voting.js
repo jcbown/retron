@@ -11,11 +11,11 @@ export default {
     props: ["details"],
     data: function () {
         return {
-
+            themes: []
         }
     },
     created: function() {
-
+        this.themes = this.details.themes;
     },
     methods: {
         func: function() {

@@ -51,7 +51,7 @@ export default {
             let card = {
                 uuid: uuid,
                 cardType: cardType,
-                text: ""
+                text: "enter some text"
             };
             this.$stompClient.send("/app/card/create", {}, JSON.stringify(card));
             this.editCard(card);

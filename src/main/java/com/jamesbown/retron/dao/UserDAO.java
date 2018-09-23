@@ -5,6 +5,7 @@ import org.springframework.stereotype.Repository;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public class UserDAO {
@@ -17,6 +18,10 @@ public class UserDAO {
 
     public boolean hasUser(User user) {
         return this.users.contains(user);
+    }
+
+    public Optional<User> getUser(String id) {
+        return users.stream().filter(u -> u.getId().equals(id)).findFirst();
     }
 
     public void reset() {

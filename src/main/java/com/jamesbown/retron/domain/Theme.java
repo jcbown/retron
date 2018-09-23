@@ -7,6 +7,7 @@ import java.util.List;
 public class Theme {
 
     private List<Card> cards;
+    private List<Vote> votes;
 
     public Theme(List<Card> cards) {
         this.cards = cards;
@@ -14,5 +15,9 @@ public class Theme {
 
     public List<Card> getCards() {
         return cards;
+    }
+
+    public List<Vote> getVotes() {
+        return votes;
     }
 }

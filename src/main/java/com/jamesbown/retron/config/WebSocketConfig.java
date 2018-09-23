@@ -1,6 +1,7 @@
 package com.jamesbown.retron.config;
 
 
+import com.jamesbown.retron.dao.UserDAO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.messaging.simp.config.ChannelRegistration;

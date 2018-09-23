@@ -15,31 +15,54 @@ export default {
     },
     // language=HTML
     template: `
-        <div class="row">
-            <div class="col">
-
-                <div>{{ user.fullName }} - {{ user.initials }}</div>
-
-                <div class="alert alert-success hidden" id="notification">
-                    <strong>Notification! </strong>
-                    {{notification}}
+        <div id="home">
+            <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
+                <a class="navbar-brand" href="javascript:void(0)" @click="reloadPage()">retron</a>
+                <div class="collapse navbar-collapse" id="navbarText">
+                    <ul class="navbar-nav mr-auto"> <!-- We have this as it stretches across the navbar -->
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                Admin
+                            </a>
+                            <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                                <a class="dropdown-item" href="javascript:void(0)" @click="advancePhase()">Force Next Phase</a>
+                                <a class="dropdown-item" href="javascript:void(0)" @click="resetState()">Reset Retrospective</a>
+                            </div>
+                        </li>
+                    </ul>
+                    <span class="navbar-text">
+                      <strong>Phase: </strong>{{ getPhaseName() }}
+                       &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;   
+                      {{ user.fullName }}
+                    </span>
                 </div>
-                
-                <div class="alert alert-primary" role="alert">
-                    <strong>Current Phase:</strong> {{ getPhaseText(currentPhase) }}
+            </nav>
+            <div id="home-container" class="container-fluid">
+                <div class="row">
+                    <div class="col">
+
+                        
+
+                        <div class="alert alert-success hidden" id="notification">
+                            <strong>Notification! </strong>
+                            {{notification}}
+                        </div>
+
+
+                        <submission v-if="this.currentPhase == 'SUBMISSION'" :details="submissionPhase"></submission>
+                        <discussion v-if="this.currentPhase == 'DISCUSSION'" :cardsByOwner="discussionPhase.cardsByOwner" :currentOwnerIndex="discussionPhase.currentOwner"></discussion>
+                        <grouping v-if="this.currentPhase == 'GROUPING'" :details="groupingPhase"></grouping>
+                        <voting v-if="this.currentPhase == 'VOTING'" :details="votingPhase"></voting>
+                        <actions v-if="this.currentPhase == 'ACTIONS'" :details="actionsPhase"></actions>
+
+                    </div>
                 </div>
-
-                <button type="button" class="btn btn-primary float-right"
-                        @click="advancePhase()">Next Phase
-                </button>
-
-                <submission v-if="this.currentPhase == 'SUBMISSION'" :details="submissionPhase" ></submission>
-                <discussion v-if="this.currentPhase == 'DISCUSSION'" :details="discussionPhase"></discussion>
-                <grouping v-if="this.currentPhase == 'GROUPING'" :details="groupingPhase"></grouping>
-                <voting v-if="this.currentPhase == 'VOTING'" :details="votingPhase"></voting>
-                <actions v-if="this.currentPhase == 'ACTIONS'" :details="actionsPhase"></actions>
-
             </div>
+            <footer id="home-footer">
+                <div class="container">
+                    <span class="text-muted"><strong>{{ getPhaseName() }}</strong> - {{ getPhaseHelp() }}</span>
+                </div>
+            </footer>
         </div>
     `,
     props: ["user"],
@@ -53,8 +76,6 @@ export default {
             name: this.user.fullName
         }, function (frame) {
             console.log('Connected: ' + frame);
-
-            this.resetState(); // TODO REMOVEME
 
             // Subscribe to Phase Changes
             stompClient.subscribe('/user/topic/phase/submission', function (msg) {
@@ -107,12 +128,19 @@ export default {
             groupingPhase: null,
             votingPhase: null,
             actionsPhase: null,
-            phaseText: {
-                SUBMISSION: "Submission - enter your innermost thoughts",
-                DISCUSSION: "Discussion - let's chat",
-                GROUPING: "Grouping - group the common ideas together",
-                VOTING: "Voting - nearly done now",
-                ACTIONS: "Actions - let's not make this all a waste of time"
+            phaseHelp: {
+                SUBMISSION: "Add cards to the board with your thoughts for this retrospective. Double click on a card to edit.",
+                DISCUSSION: "You can use the left and right arrow keys to navigate through users.",
+                GROUPING: "Click on cards to group them into similar themes.",
+                VOTING: "Click on a theme to vote for it. You have three votes available. You can vote for the same theme more than once.",
+                ACTIONS: "Decide on actions for the themes with the most votes."
+            },
+            phaseName: {
+                SUBMISSION: "Submission",
+                DISCUSSION: "Discussion",
+                GROUPING: "Grouping",
+                VOTING: "Voting",
+                ACTIONS: "Actions"
             },
             notification: null
         }
@@ -136,21 +164,32 @@ export default {
             this.currentPhase = "VOTING";
         },
         displayActionsPhase: function (msg) {
-            this.actionPhase = JSON.parse(msg.body);
+            this.actionsPhase = JSON.parse(msg.body);
             this.currentPhase = "ACTIONS";
+        },
+        reloadPage: function() {
+            location.reload(true);
         },
         resetState: function () {
             this.$stompClient.send("/app/reset");
         },
-        showNotification: function(msg) {
+        showNotification: function (msg) {
             this.notification = JSON.parse(msg.body).message;
-            $("#notification").fadeTo(2000, 500).slideUp(500, function(){
+            $("#notification").fadeTo(2000, 500).slideUp(500, function () {
                 $("#notification").slideUp(500);
             });
         },
-        getPhaseText: function (currentPhase) {
-            if (currentPhase) {
-                return this.phaseText[currentPhase];
+        showAdvancePhaseBtn: function () {
+            return this.currentPhase !== "ACTIONS";
+        },
+        getPhaseName: function () {
+            if (this.currentPhase) {
+                return this.phaseName[this.currentPhase];
+            }
+        },
+        getPhaseHelp: function () {
+            if (this.currentPhase) {
+                return this.phaseHelp[this.currentPhase];
             }
         },
         advancePhase: function () {
