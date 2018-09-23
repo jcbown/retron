@@ -60,7 +60,7 @@ public class PhaseService {
                 break;
             case VOTING:
                 phaseDAO.setCurrentPhase(Phase.ACTIONS);
-                ActionsPhaseMessage apm = new ActionsPhaseMessage(themeDAO.getThemes());
+                ActionsPhaseMessage apm = themeDAO.decideOnActionThemes();
                 this.template.convertAndSend("/topic/phase/actions", apm);
                 break;
             case ACTIONS:
@@ -89,7 +89,7 @@ public class PhaseService {
                 this.template.convertAndSendToUser(username, "/topic/phase/voting", vpm);
                 break;
             case ACTIONS:
-                ActionsPhaseMessage apm = new ActionsPhaseMessage(themeDAO.getThemes());
+                ActionsPhaseMessage apm = themeDAO.decideOnActionThemes();
                 this.template.convertAndSendToUser(username, "/topic/phase/actions", apm);
                 break;
         }

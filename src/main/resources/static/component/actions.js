@@ -1,30 +1,43 @@
-import Card from "./card.js"
+import Theme from "./theme.js"
 
 export default {
     components: {
-        Card
+        Theme
     },
     // language=HTML
     template: `
-        <div class="row">
-            <div class="col">
-                <div v-for="theme in themes">
-                    <card v-for="card in theme.cards" :key="card.id" :card="card"/>
+        <div class="container">
+            <div class="row">
+                <div class="col">
+                    <div v-for="theme in actionThemes">
+                        <theme :theme="theme"/>
+                        <span>Voters: </span>
+                        <span v-for="vote in theme.votes">
+                            <span class="badge badge-pill badge-success">{{vote.user.fullName}}</span>
+                        </span>
+                        <div>&nbsp;</div>
+                    </div>
+                    <div id="muted-themes" v-for="theme in otherThemes">
+                        <theme :theme="theme"/>
+                        <span v-for="vote in theme.votes">
+                            <span class="badge badge-pill badge-secondary">{{vote.user.fullName}}</span>
+                        </span>
+                        <div>&nbsp;</div>
+                    </div>
                 </div>
             </div>
         </div>
     `,
-    props: ["details"],
+    props: ["actionThemes", "otherThemes"],
     data: function () {
         return {
-            themes: []
+            blah: []
         }
     },
-    created: function() {
-        this.themes = this.details.themes;
+    created: function () {
     },
     methods: {
-        func: function() {
+        func: function () {
 
         }
     }

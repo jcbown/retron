@@ -27,4 +27,8 @@ public class UserDAO {
     public void reset() {
         this.users.clear();
     }
+
+    public int getUserCount() {
+        return this.users.size();
+    }
 }

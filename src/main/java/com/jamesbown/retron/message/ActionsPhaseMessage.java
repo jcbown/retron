@@ -8,13 +8,19 @@ import java.util.List;
 
 public class ActionsPhaseMessage {
 
-    private final List<Theme> themes;
+    private final List<Theme> actionThemes;
+    private final List<Theme> otherThemes;
 
-    public ActionsPhaseMessage(List<Theme> themes) {
-        this.themes = themes;
+    public ActionsPhaseMessage(List<Theme> actionThemes, List<Theme> otherThemes) {
+        this.actionThemes = actionThemes;
+        this.otherThemes = otherThemes;
     }
 
-    public List<Theme> getThemes() {
-        return themes;
+    public List<Theme> getActionThemes() {
+        return actionThemes;
+    }
+
+    public List<Theme> getOtherThemes() {
+        return otherThemes;
     }
 }

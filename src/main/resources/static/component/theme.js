@@ -1,17 +1,19 @@
+import Card from "./card.js"
+
 export default {
-    components: {},
+    components: {
+        Card
+    },
     // language=HTML
     template: `
-        <div class="card mb-2">
-            <div class="card-body">
-                <span>{{card.text}}</span>
-                <span class="float-right" width="20rem">
-                        <a href="javascript:void(0)" class="badge badge-primary">{{card.owner}}</a>
-                </span>
+        <div>
+            <div>
+                <card v-for="card in theme.cards" :key="card.id" :card="card"/>
+                <span v-for="i in theme.votesCast"><strong>+1</strong></span>
             </div>
         </div>
     `,
-    props: ["card"],
+    props: ["theme"],
     data: function () {
         return {}
     },

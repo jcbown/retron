@@ -39,7 +39,7 @@ export default {
             for (let i = 0; i <= this.currentOwnerIndex; i++) {
                 result = result.concat(this.cardsByOwner[i].cards.filter(c => c.cardType === cardType));
             }
-            return result.reverse();
+            return result;
         },
         shouldHighlight: function (card) {
             return card.owner === this.cardsByOwner[this.currentOwnerIndex].owner;

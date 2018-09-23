@@ -52,8 +52,8 @@ export default {
                         <submission v-if="this.currentPhase == 'SUBMISSION'" :details="submissionPhase"></submission>
                         <discussion v-if="this.currentPhase == 'DISCUSSION'" :cardsByOwner="discussionPhase.cardsByOwner" :currentOwnerIndex="discussionPhase.currentOwner"></discussion>
                         <grouping v-if="this.currentPhase == 'GROUPING'" :details="groupingPhase"></grouping>
-                        <voting v-if="this.currentPhase == 'VOTING'" :details="votingPhase"></voting>
-                        <actions v-if="this.currentPhase == 'ACTIONS'" :details="actionsPhase"></actions>
+                        <voting v-if="this.currentPhase == 'VOTING'" :themes="votingPhase.themes"></voting>
+                        <actions v-if="this.currentPhase == 'ACTIONS'" :actionThemes="actionsPhase.actionThemes" :otherThemes="actionsPhase.otherThemes"></actions>
 
                     </div>
                 </div>
@@ -161,6 +161,7 @@ export default {
         },
         displayVotingPhase: function (msg) {
             this.votingPhase = JSON.parse(msg.body);
+            this.votingPhase.themes.forEach(t => Vue.set(t, 'votesCast',0));
             this.currentPhase = "VOTING";
         },
         displayActionsPhase: function (msg) {
