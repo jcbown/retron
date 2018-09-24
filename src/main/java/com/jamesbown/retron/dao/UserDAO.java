@@ -12,23 +12,23 @@ public class UserDAO {
 
     private List<User> users = new LinkedList<>();
 
-    public void createUser(User user) {
+    public synchronized void createUser(User user) {
         this.users.add(user);
     }
 
-    public boolean hasUser(User user) {
+    public synchronized boolean hasUser(User user) {
         return this.users.contains(user);
     }
 
-    public Optional<User> getUser(String id) {
+    public synchronized Optional<User> getUser(String id) {
         return users.stream().filter(u -> u.getId().equals(id)).findFirst();
     }
 
-    public void reset() {
+    public synchronized void reset() {
         this.users.clear();
     }
 
-    public int getUserCount() {
+    public synchronized int getUserCount() {
         return this.users.size();
     }
 }

@@ -14,25 +14,25 @@ public class CardDAO {
     private final Map<UUID, Card> cards = Collections.synchronizedMap(new LinkedHashMap<>());
     private int currentCardOwnerIndex = 0;
 
-    public void createCard(Card card) {
+    public synchronized void createCard(Card card) {
         this.cards.put(card.getUuid(), card);
     }
 
-    public void updateCard(Card card) {
+    public synchronized void updateCard(Card card) {
         this.cards.put(card.getUuid(), card);
     }
 
-    public List<Card> getCards() {
+    public synchronized List<Card> getCards() {
         return new ArrayList<>(this.cards.values());
     }
 
-    public List<Card> getCardsForOwner(String owner) {
+    public synchronized List<Card> getCardsForOwner(String owner) {
         return this.cards.values().stream()
                 .filter(c -> c.getOwner().equals(owner))
                 .collect(Collectors.toList());
     }
 
-    public List<OwnedCards> getCardsByOwner() {
+    public synchronized List<OwnedCards> getCardsByOwner() {
         List<Card> cards = this.getCards(); // Get a copy of the cards
 
         // Shuffle cards (sort by random uuid) and collect distinct owners
@@ -55,7 +55,7 @@ public class CardDAO {
         return cardsByOwner;
     }
 
-    public List<Theme> createThemesFromCards() {
+    public synchronized List<Theme> createThemesFromCards() {
         LinkedList<Theme> themes = new LinkedList<>();
         synchronized (cards) {
             cards.values().forEach(c -> {
@@ -66,24 +66,24 @@ public class CardDAO {
         return themes;
     }
 
-    public int getCurrentCardOwnerIndex() {
+    public synchronized int getCurrentCardOwnerIndex() {
         return currentCardOwnerIndex;
     }
 
-    public void incrementCurrentCardOwnerIndex() {
+    public synchronized void incrementCurrentCardOwnerIndex() {
         long ownerCount = cards.values().stream().map(Card::getOwner).distinct().count();
         if (this.currentCardOwnerIndex + 1 < ownerCount) {
             this.currentCardOwnerIndex++;
         }
     }
 
-    public void decrementCurrentCardOwnerIndex() {
+    public synchronized void decrementCurrentCardOwnerIndex() {
         if (this.currentCardOwnerIndex > 0) {
             this.currentCardOwnerIndex--;
         }
     }
 
-    public void reset() {
+    public synchronized void reset() {
         cards.clear();
         this.currentCardOwnerIndex = 0;
     }

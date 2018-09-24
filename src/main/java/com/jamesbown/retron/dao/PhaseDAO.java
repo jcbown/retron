@@ -16,7 +16,7 @@ public class PhaseDAO {
         this.currentPhase = currentPhase;
     }
 
-    public void reset() {
+    public synchronized void reset() {
         this.setCurrentPhase(Phase.SUBMISSION);
     }
 }
