@@ -172,7 +172,10 @@ export default {
             location.reload(true);
         },
         resetState: function () {
-            this.$stompClient.send("/app/reset");
+            let r = confirm("Only the leader of the retrospective should perform this action.\nAre you sure you know what you are doing? This cannot be undone!");
+            if (r === true) {
+                this.$stompClient.send("/app/reset");
+            }
         },
         showNotification: function (msg) {
             this.notification = JSON.parse(msg.body).message;
@@ -194,7 +197,10 @@ export default {
             }
         },
         advancePhase: function () {
-            this.$stompClient.send("/app/advance-phase");
+            let r = confirm("Only the leader of the retrospective should perform this action.\nAre you sure you know what you are doing? This cannot be undone!");
+            if (r === true) {
+                this.$stompClient.send("/app/advance-phase");
+            }
         }
     }
 }

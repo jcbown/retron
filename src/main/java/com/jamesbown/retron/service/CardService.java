@@ -35,4 +35,10 @@ public class CardService {
     public void updateCard(Card card) {
         cardDAO.updateCard(card);
     }
+
+    public void deleteCard(Card card) {
+        String username = principalHolder.getPrincipal().getName();
+        cardDAO.deleteCard(card.getUuid());
+        this.template.convertAndSendToUser(username, "/topic/card/delete", card);
+    }
 }

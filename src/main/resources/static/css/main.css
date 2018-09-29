@@ -1,5 +1,6 @@
 html, body, .fullHeight {
     height: 100%;
+    font-family: 'Open Sans', sans-serif;
 }
 
 .highlightedCard {

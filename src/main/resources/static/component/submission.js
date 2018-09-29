@@ -9,11 +9,18 @@ export default {
                 <h3>{{cardType}}</h3>
                 <div v-for="card in getCards(cardType)" class="card mb-2" @dblclick="editCard(card)">
                     <div class="card-body">
-                        <input v-if="isEditing(card)" @keyup.enter="saveCard(card, $event)" @blur="saveCard(card, $event)" type="text" :value="card.text" size="30">
+                        <input ref="cardEditInput" v-if="isEditing(card)" @keyup.enter="saveCard(card, $event)" @blur="saveCard(card, $event)"
+                               placeholder="Enter some text" type="text" :value="card.text" size="30">
                         <span v-else>{{card.text}}</span>
                         <span class="float-right" width="20rem">
-                            <a href="javascript:void(0)" class="badge badge-primary">{{card.owner}}</a>
+                            <a href="javascript:void(0)" @click="editCard(card)">
+                                <span class="oi oi-pencil" title="Edit Card" aria-hidden="true"></span>
+                            </a>
+                            <a href="javascript:void(0)" @click="deleteCard(card)">
+                                <span class="oi oi-trash" title="Delete Card" aria-hidden="true"></span>
+                            </a>
                         </span>
+                        
                     </div>
                 </div>
                 <button type="button" class="btn"
@@ -35,6 +42,13 @@ export default {
         this.cards = this.details.cards;
         this.cardTypes = this.$cardTypes;
         this.$stompClient.subscribe("/user/topic/card/create", this.onCardCreated);
+        this.$stompClient.subscribe("/user/topic/card/delete", this.onCardDeleted);
+    },
+    updated: function() {
+        // ensure input is focussed if present
+        if (this.$refs.cardEditInput) {
+            this.$refs.cardEditInput.forEach(el => el.focus());
+        }
     },
     computed: {
         addCardButtonClasses: function () {
@@ -51,13 +65,16 @@ export default {
             let card = {
                 uuid: uuid,
                 cardType: cardType,
-                text: "enter some text"
+                text: ""
             };
             this.$stompClient.send("/app/card/create", {}, JSON.stringify(card));
             this.editCard(card);
         },
         editCard: function(card) {
             this.uuidCurrentlyEditing = card.uuid;
+        },
+        deleteCard: function(card) {
+            this.$stompClient.send("/app/card/delete", {}, JSON.stringify(card));
         },
         saveCard: function(card, e) {
             let text = $(e.currentTarget).val();
@@ -72,6 +89,11 @@ export default {
         onCardCreated: function(msg) {
             let card = JSON.parse(msg.body);
             this.cards.push(card);
+        },
+        onCardDeleted: function(msg) {
+            let card = JSON.parse(msg.body);
+            _.remove(this.cards, c => c.uuid === card.uuid);
+            this.cards = [...this.cards]; // since vue doesn't play nice with lodash
         },
         getCards: function (columnName) {
             return this.cards.filter(c => c.cardType === columnName);

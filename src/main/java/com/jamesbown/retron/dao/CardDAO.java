@@ -87,4 +87,8 @@ public class CardDAO {
         cards.clear();
         this.currentCardOwnerIndex = 0;
     }
+
+    public synchronized void deleteCard(UUID uuid) {
+        this.cards.remove(uuid);
+    }
 }

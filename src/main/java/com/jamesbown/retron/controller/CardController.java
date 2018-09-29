@@ -18,6 +18,11 @@ public class CardController {
         this.cardService.createCard(card);
     }
 
+    @MessageMapping("/card/delete")
+    public void deleteCard(Card card) {
+        this.cardService.deleteCard(card);
+    }
+
     @MessageMapping("/card/update")
     public void updateCard(Card card) {
         this.cardService.updateCard(card);

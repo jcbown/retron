@@ -40,7 +40,10 @@ function connect() {
 }
 
 function resetState() {
-    stompClient.send("/app/reset");
+    let r = confirm("Are you sure you know what you are doing? This cannot be undone!");
+    if (r === true) {
+        stompClient.send("/app/reset");
+    }
 }
 
 function createCard() {
@@ -63,7 +66,10 @@ function showNotification(notification) {
 
 
 function advancePhase() {
-    stompClient.send("/app/advance-phase");
+    let r = confirm("Are you sure you know what you are doing? This cannot be undone!");
+    if (r === true) {
+        stompClient.send("/app/advance-phase");
+    }
 }
 
 function userJoin() {
