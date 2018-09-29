@@ -1,18 +1,37 @@
 # Retron
 
-This is a Retrospective Tool.
+This is a web application used for running remote 
+Retrospectives.
 
 ## Build
 
-`./gradlew` build
-
-`docker build -t retron:latest .`
+```
+./gradlew build
+docker build -t retron:latest .
+```
 
 ## Deploy
 
-`docker save -o images.tar retron:latest`
+On build machine
+```
+docker save -o images.tar retron:latest
+```
 
-`docker load -i images.tar`
+Copy the images to the deployment machine
+```
+scp images.tar <deployment_machine>:~/images.tar
+```
+
+On deployment machine
+```
+docker load -i images.tar
+```
+
+Port 80 must be open on deployment machine
 
 ## Run
-`docker run -p 80:8080 retron:latest`
+
+On deployment machine
+```
+docker run -p 80:8080 retron:latest
+```
