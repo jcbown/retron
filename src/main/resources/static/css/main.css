@@ -35,6 +35,22 @@ html, body, .fullHeight {
     background-color: #f5f5f5;
 }
 
-#muted-themes {
+.muted-themes {
     color: lightgray;
+}
+
+.cursorPointer {
+    cursor:pointer;
+}
+
+
+.theme {
+    position: relative;
+}
+
+.votePane {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    font-size: 0.75rem;
 }

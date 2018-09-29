@@ -9,21 +9,33 @@ export default {
         <div class="container">
             <div class="row">
                 <div class="col">
-                    <div v-for="theme in actionThemes">
-                        <theme :theme="theme"/>
-                        <span>Voters: </span>
-                        <span v-for="vote in theme.votes">
-                            <span class="badge badge-pill badge-success">{{vote.user.fullName}}</span>
-                        </span>
-                        <div>&nbsp;</div>
-                    </div>
-                    <div id="muted-themes" v-for="theme in otherThemes">
-                        <theme :theme="theme"/>
-                        <span v-for="vote in theme.votes">
-                            <span class="badge badge-pill badge-secondary">{{vote.user.fullName}}</span>
-                        </span>
-                        <div>&nbsp;</div>
-                    </div>
+                    <h4>Plan Actions</h4>
+                </div>
+            </div>
+            <div class="row" v-for="theme in actionThemes">
+                <div class="col">
+                    <theme :theme="theme"/>
+                </div>
+                <div class="col">
+                    <span>Voters: </span>
+                    <span v-for="vote in theme.votes" class="pr-2">
+                        <span class="badge badge-pill badge-success">{{vote.user.fullName}}</span>
+                    </span>
+                </div>
+            </div>
+            <div class="row mt-5">
+                <div class="col">
+                    <h4>Other Themes</h4>
+                </div>
+            </div>
+            <div class="row muted-themes" v-for="theme in otherThemes">
+                <div class="col">
+                    <theme :theme="theme"/>
+                </div>
+                <div class="col">
+                    <span v-for="vote in theme.votes" class="pr-2">
+                        <span class="badge badge-pill badge-secondary">{{vote.user.fullName}}</span>
+                    </span>
                 </div>
             </div>
         </div>

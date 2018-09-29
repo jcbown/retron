@@ -8,17 +8,23 @@ export default {
     // language=HTML
     template: `
         <div>
-            <div class="row">
+            <div class="row mb-3">
                 <div class="col">
-                    <span><strong>Votes Remaining:</strong> {{totalVotesRemaining}}</span>
-                    <button v-if="!voted && totalVotesRemaining === 0" @click="sendReady" class="btn btn-primary btn-sm">Done</button>
+                    <div>
+                        <strong>Voters:</strong>
+                        <!-- Put user gutter here -->
+                    </div>
+                    <div class="float-right">
+                        <span><strong>Votes Remaining:</strong> {{totalVotesRemaining}}</span>
+                        <button v-if="!voted && totalVotesRemaining === 0" @click="sendReady" class="btn btn-primary btn-sm">Submit Votes</button>
+                    </div>
                 </div>
             </div>
             <div class="row">
                 <div v-for="cardType in cardTypes" class="col">
                     <h3>{{cardType}}</h3>
                     <theme v-for="theme in getThemes(cardType)" :key="theme.id" :theme="theme"
-                           @click.native="onThemeClick(theme)"/>
+                           @click.native="onThemeClick(theme)" class="cursorPointer"/>
                 </div>
             </div>
         </div>

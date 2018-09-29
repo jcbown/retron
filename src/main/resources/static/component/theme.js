@@ -7,9 +7,13 @@ export default {
     // language=HTML
     template: `
         <div>
-            <div>
+            <div class="theme">
                 <card v-for="card in theme.cards" :key="card.id" :card="card"/>
-                <span v-for="i in theme.votesCast"><strong>+1</strong></span>
+                <span class="votePane">
+                    <span v-for="i in theme.votesCast" class="vote pl-1">
+                        <span class="badge badge-pill badge-success">&nbsp;</span>
+                    </span>    
+                </span>
             </div>
         </div>
     `,

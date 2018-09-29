@@ -23,8 +23,9 @@ export default {
                         
                     </div>
                 </div>
-                <button type="button" class="btn"
-                        :class="addCardButtonClasses"
+                <button type="button" class="btn addCardBtn"
+                        data-toggle="tooltip" data-placement="right"
+                        :class="cardButtonClasses"
                         @click="createCard(cardType)">Add Card
                 </button>
             </div>
@@ -44,18 +45,40 @@ export default {
         this.$stompClient.subscribe("/user/topic/card/create", this.onCardCreated);
         this.$stompClient.subscribe("/user/topic/card/delete", this.onCardDeleted);
     },
+    mounted: function() {
+        $('.addCardBtn').tooltip({
+            title: this.cardButtonTooltip
+        });
+    },
     updated: function() {
+        $('.addCardBtn').tooltip('dispose');
+        $('.addCardBtn').tooltip({
+            title: this.cardButtonTooltip
+        });
+
         // ensure input is focussed if present
         if (this.$refs.cardEditInput) {
             this.$refs.cardEditInput.forEach(el => el.focus());
         }
     },
     computed: {
-        addCardButtonClasses: function () {
+        cardsNormal: function() { return this.cards.length < 5; },
+        cardsWarning: function() { return this.cards.length >=5 && this.cards.length < 7; },
+        cardsError: function() { return this.cards.length >=7; },
+        cardButtonClasses: function () {
             return {
-                'btn-primary': this.cards.length < 5,
-                'btn-warning': this.cards.length >=5 && this.cards.length < 7,
-                'btn-danger': this.cards.length >=7
+                'btn-primary': this.cardsNormal,
+                'btn-warning': this.cardsWarning,
+                'btn-danger': this.cardsError
+            }
+        },
+        cardButtonTooltip: function() {
+            if (this.cardsWarning) {
+                return "That's probably enough.";
+            } else if (this.cardsError) {
+                return "We don't want to be here all day. Consider deleting some cards.";
+            } else {
+                return null;
             }
         }
     },
