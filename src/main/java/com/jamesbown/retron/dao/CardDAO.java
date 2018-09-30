@@ -3,6 +3,7 @@ package com.jamesbown.retron.dao;
 import com.jamesbown.retron.domain.OwnedCards;
 import com.jamesbown.retron.domain.Theme;
 import com.jamesbown.retron.domain.Card;
+import com.jamesbown.retron.domain.User;
 import org.springframework.stereotype.Repository;
 
 import java.util.*;
@@ -26,9 +27,9 @@ public class CardDAO {
         return new ArrayList<>(this.cards.values());
     }
 
-    public synchronized List<Card> getCardsForOwner(String owner) {
+    public synchronized List<Card> getCardsForOwner(User user) {
         return this.cards.values().stream()
-                .filter(c -> c.getOwner().equals(owner))
+                .filter(c -> c.getUser().equals(user))
                 .collect(Collectors.toList());
     }
 
@@ -37,9 +38,9 @@ public class CardDAO {
 
         // Shuffle cards (sort by random uuid) and collect distinct owners
         // This will be deterministic for a static set of cards
-        List<String> owners = cards.stream()
+        List<User> owners = cards.stream()
                 .sorted(Comparator.comparing(Card::getUuid))
-                .map(Card::getOwner)
+                .map(Card::getUser)
                 .distinct()
                 .collect(Collectors.toList());
 
@@ -47,7 +48,7 @@ public class CardDAO {
         List<OwnedCards> cardsByOwner = new LinkedList<>();
         owners.forEach(o -> {
             List<Card> cardsForOwner = cards.stream()
-                    .filter(c -> c.getOwner().equals(o))
+                    .filter(c -> c.getUser().equals(o))
                     .collect(Collectors.toList());
             cardsByOwner.add(new OwnedCards(o, cardsForOwner));
         });
@@ -71,7 +72,7 @@ public class CardDAO {
     }
 
     public synchronized void incrementCurrentCardOwnerIndex() {
-        long ownerCount = cards.values().stream().map(Card::getOwner).distinct().count();
+        long ownerCount = cards.values().stream().map(Card::getUser).distinct().count();
         if (this.currentCardOwnerIndex + 1 < ownerCount) {
             this.currentCardOwnerIndex++;
         }

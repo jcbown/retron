@@ -1,9 +1,6 @@
 package com.jamesbown.retron.controller;
 
-import com.jamesbown.retron.dao.CardDAO;
-import com.jamesbown.retron.dao.PhaseDAO;
-import com.jamesbown.retron.dao.ThemeDAO;
-import com.jamesbown.retron.dao.UserDAO;
+import com.jamesbown.retron.dao.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.stereotype.Controller;
@@ -23,11 +20,15 @@ public class ResetController {
     @Autowired
     private UserDAO userDAO;
 
+    @Autowired
+    private SubmissionPhaseDAO submissionPhaseDAO;
+
     @MessageMapping("/reset")
     public void reset() {
         cardDAO.reset();
         phaseDAO.reset();
         themeDAO.reset();
         userDAO.reset();
+        submissionPhaseDAO.reset();
     }
 }

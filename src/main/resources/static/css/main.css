@@ -54,3 +54,14 @@ html, body, .fullHeight {
     right: 5px;
     font-size: 0.75rem;
 }
+
+.user-badge {
+    position: relative;
+}
+
+.user-badge-done {
+    position: absolute;
+    top: 6px;
+    right: -11px;
+    color: forestgreen;
+}

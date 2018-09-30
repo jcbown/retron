@@ -10,18 +10,18 @@ public class Card {
     private UUID uuid;
     private String cardType;
     private String text;
-    private String owner;
+    private User user;
 
 
     @JsonCreator
     public Card(@JsonProperty("uuid") UUID uuid,
                 @JsonProperty("cardType") String cardType,
                 @JsonProperty("text") String text,
-                @JsonProperty("owner") String owner) {
+                @JsonProperty("user") User user) {
         this.uuid = uuid;
         this.cardType = cardType;
         this.text = text;
-        this.owner = owner;
+        this.user = user;
     }
 
     public UUID getUuid() {
@@ -32,8 +32,8 @@ public class Card {
         return text;
     }
 
-    public String getOwner() {
-        return owner;
+    public User getUser() {
+        return user;
     }
 
     public String getCardType() {

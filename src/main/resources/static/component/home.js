@@ -44,7 +44,6 @@ export default {
                         
 
                         <div class="alert alert-success hidden" id="notification">
-                            <strong>Notification! </strong>
                             {{notification}}
                         </div>
 
@@ -115,9 +114,9 @@ export default {
             // Join session
             let user = {
                 fullName: this.user.fullName,
-                shortName: this.user.initials
+                colour: this.user.colour
             };
-            stompClient.send("/app/user/join", {user: user.fullName}, JSON.stringify(user));
+            stompClient.send("/app/user/join", {user: user.fullName}, JSON.stringify(user)); //TODO remove header?
         }.bind(this));
     },
     data: function () {

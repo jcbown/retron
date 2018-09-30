@@ -4,15 +4,15 @@ import java.util.List;
 
 public class OwnedCards {
 
-    private String owner;
+    private User owner;
     private List<Card> cards;
 
-    public OwnedCards(String owner, List<Card> cards) {
+    public OwnedCards(User owner, List<Card> cards) {
         this.owner = owner;
         this.cards = cards;
     }
 
-    public String getOwner() {
+    public User getOwner() {
         return owner;
     }
 

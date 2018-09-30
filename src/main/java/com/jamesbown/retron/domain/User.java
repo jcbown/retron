@@ -9,13 +9,13 @@ public class User {
 
     private String id;
     private String fullName;
-    private String shortName;
+    private String colour;
 
     @JsonCreator
-    public User(@JsonProperty("fullName") String fullName, @JsonProperty("shortName") String shortName) {
+    public User(@JsonProperty("fullName") String fullName, @JsonProperty("colour") String colour) {
         this.id = fullName;
         this.fullName = fullName;
-        this.shortName = shortName;
+        this.colour = colour;
     }
 
     public String getId() {
@@ -30,12 +30,12 @@ public class User {
         this.fullName = fullName;
     }
 
-    public String getShortName() {
-        return shortName;
+    public String getColour() {
+        return colour;
     }
 
-    public void setShortName(String shortName) {
-        this.shortName = shortName;
+    public void setColour(String colour) {
+        this.colour = colour;
     }
 
     @Override

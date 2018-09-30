@@ -1,6 +1,8 @@
+import UserBadge from "./userBadge.js"
+
 export default {
     components: {
-
+        UserBadge
     },
     // language=HTML
     template: `
@@ -14,11 +16,11 @@ export default {
                             <input v-model="fullName" type="text" class="form-control" id="fullName" placeholder="Enter your full name">
                         </div>
                         <div class="form-group">
-                            <label for="initials">Initials</label>
-                            <input v-model="initials" type="text" class="form-control" id="initials" placeholder="Enter your initials">
+                            <label for="colour">Colour</label>
+                            <input v-model="colour" type="color" class="form-control" id="colour">
                         </div>
                         <div>
-                            Your badge will appear like this to others: <a href="javascript:void(0)" class="badge badge-primary">{{fullName}}</a>
+                            Your badge will appear like this to others: <userBadge :fullName="fullName" :colour="colour"/>
                         </div>
                         <div>
                             <button @click="submit()" type="submit" class="btn btn-primary">Submit</button>
@@ -34,7 +36,7 @@ export default {
     data: function () {
         return {
             fullName: "",
-            initials: ""
+            colour: "#007bff"
         }
     },
     created: function() {
@@ -44,7 +46,7 @@ export default {
         submit: function() {
             this.$emit('logged-in', {
                 fullName: this.fullName,
-                initials: this.initials
+                colour: this.colour
             });
         }
     }

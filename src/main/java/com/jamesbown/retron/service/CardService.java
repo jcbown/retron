@@ -2,8 +2,10 @@ package com.jamesbown.retron.service;
 
 import com.jamesbown.retron.config.WebSocketPrincipalHolder;
 import com.jamesbown.retron.dao.CardDAO;
+import com.jamesbown.retron.dao.UserDAO;
 import com.jamesbown.retron.domain.Card;
 import com.jamesbown.retron.domain.Notification;
+import com.jamesbown.retron.domain.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
@@ -24,9 +26,12 @@ public class CardService {
     @Autowired
     private CardDAO cardDAO;
 
+    @Autowired
+    private UserDAO userDAO;
+
     public void createCard(Card card) {
         String username = principalHolder.getPrincipal().getName();
-        Card cardWithOwner = new Card(card.getUuid(), card.getCardType(), card.getText(), username);
+        Card cardWithOwner = new Card(card.getUuid(), card.getCardType(), card.getText(), userDAO.getUser(username).get());
         cardDAO.createCard(cardWithOwner);
         this.template.convertAndSendToUser(username,"/topic/card/create", cardWithOwner);
     }

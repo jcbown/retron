@@ -1,8 +1,10 @@
 import Theme from "./theme.js"
+import UserBadge from "./userBadge.js"
 
 export default {
     components: {
-        Theme
+        Theme,
+        UserBadge
     },
     // language=HTML
     template: `
@@ -12,14 +14,14 @@ export default {
                     <h4>Plan Actions</h4>
                 </div>
             </div>
-            <div class="row" v-for="theme in actionThemes">
+            <div class="row align-items-center" v-for="theme in actionThemes">
                 <div class="col">
                     <theme :theme="theme"/>
                 </div>
                 <div class="col">
                     <span>Voters: </span>
                     <span v-for="vote in theme.votes" class="pr-2">
-                        <span class="badge badge-pill badge-success">{{vote.user.fullName}}</span>
+                        <userBadge :fullName="vote.user.fullName" :colour="vote.user.colour"/>
                     </span>
                 </div>
             </div>
@@ -28,13 +30,13 @@ export default {
                     <h4>Other Themes</h4>
                 </div>
             </div>
-            <div class="row muted-themes" v-for="theme in otherThemes">
+            <div class="row align-items-center muted-themes" v-for="theme in otherThemes">
                 <div class="col">
                     <theme :theme="theme"/>
                 </div>
                 <div class="col">
                     <span v-for="vote in theme.votes" class="pr-2">
-                        <span class="badge badge-pill badge-secondary">{{vote.user.fullName}}</span>
+                        <userBadge :fullName="vote.user.fullName" :colour="vote.user.colour"/>
                     </span>
                 </div>
             </div>

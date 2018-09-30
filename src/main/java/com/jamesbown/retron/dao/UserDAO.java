@@ -3,6 +3,7 @@ package com.jamesbown.retron.dao;
 import com.jamesbown.retron.domain.User;
 import org.springframework.stereotype.Repository;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
@@ -20,6 +21,10 @@ public class UserDAO {
         return this.users.contains(user);
     }
 
+    public synchronized List<User> getUsers() {
+        return new ArrayList<>(this.users);
+    }
+
     public synchronized Optional<User> getUser(String id) {
         return users.stream().filter(u -> u.getId().equals(id)).findFirst();
     }
@@ -31,4 +36,6 @@ public class UserDAO {
     public synchronized int getUserCount() {
         return this.users.size();
     }
+
+
 }

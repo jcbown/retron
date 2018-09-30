@@ -2,9 +2,7 @@ package com.jamesbown.retron.service;
 
 import com.jamesbown.retron.*;
 import com.jamesbown.retron.config.WebSocketPrincipalHolder;
-import com.jamesbown.retron.dao.CardDAO;
-import com.jamesbown.retron.dao.PhaseDAO;
-import com.jamesbown.retron.dao.ThemeDAO;
+import com.jamesbown.retron.dao.*;
 import com.jamesbown.retron.domain.Card;
 import com.jamesbown.retron.domain.OwnedCards;
 import com.jamesbown.retron.domain.Theme;
@@ -15,8 +13,10 @@ import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 
 import java.security.Principal;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @Service
 public class PhaseService {
@@ -36,6 +36,12 @@ public class PhaseService {
 
     @Autowired
     private PhaseDAO phaseDAO;
+
+    @Autowired
+    private UserDAO userDAO;
+
+    @Autowired
+    private SubmissionPhaseDAO submissionPhaseDAO;
 
 
     public void advancePhase() {
@@ -71,9 +77,10 @@ public class PhaseService {
 
     public void sendCurrentPhaseToUser() {
         String username = principalHolder.getPrincipal().getName();
+        User user = userDAO.getUser(username).get();
         switch (phaseDAO.getCurrentPhase()) {
             case SUBMISSION:
-                SubmissionPhaseMessage spm = new SubmissionPhaseMessage(cardDAO.getCardsForOwner(username));
+                SubmissionPhaseMessage spm = new SubmissionPhaseMessage(cardDAO.getCardsForOwner(user), getReadyUsers());
                 this.template.convertAndSendToUser(username, "/topic/phase/submission", spm);
                 break;
             case DISCUSSION:
@@ -93,5 +100,15 @@ public class PhaseService {
                 this.template.convertAndSendToUser(username, "/topic/phase/actions", apm);
                 break;
         }
+    }
+
+    private Map<User, Boolean> getReadyUsers() {
+        Map<User, Boolean> result = new HashMap<>();
+        List<User> users = this.userDAO.getUsers();
+        users.forEach(u -> result.put(u, false));
+        this.submissionPhaseDAO.getReadyUsers().forEach(
+                u -> result.put(u, true)
+        );
+        return result;
     }
 }

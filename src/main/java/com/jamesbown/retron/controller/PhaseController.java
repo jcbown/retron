@@ -1,10 +1,7 @@
 package com.jamesbown.retron.controller;
 
 import com.jamesbown.retron.domain.Notification;
-import com.jamesbown.retron.service.DiscussionService;
-import com.jamesbown.retron.service.NotificationService;
-import com.jamesbown.retron.service.PhaseService;
-import com.jamesbown.retron.service.VotingService;
+import com.jamesbown.retron.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.stereotype.Controller;
@@ -16,13 +13,16 @@ public class PhaseController {
 
     private final NotificationService notificationService;
     private final PhaseService phaseService;
+    private final SubmissionService submissionService;
     private final DiscussionService discussionService;
     private final VotingService votingService;
 
     @Autowired
-    public PhaseController(NotificationService notificationService, PhaseService phaseService, DiscussionService discussionService, VotingService votingService) {
+    public PhaseController(NotificationService notificationService, PhaseService phaseService,
+                           SubmissionService submissionService, DiscussionService discussionService, VotingService votingService) {
         this.notificationService = notificationService;
         this.phaseService = phaseService;
+        this.submissionService = submissionService;
         this.discussionService = discussionService;
         this.votingService = votingService;
     }
@@ -31,6 +31,11 @@ public class PhaseController {
     public void advancePhase() throws Exception {
         notificationService.notifyClient(new Notification("Moving to the next phase!"));
         phaseService.advancePhase();
+    }
+
+    @MessageMapping("/submission/ready")
+    public void submissionUserReady() {
+        submissionService.userReady();
     }
 
     @MessageMapping("/discussion/previousOwner")
