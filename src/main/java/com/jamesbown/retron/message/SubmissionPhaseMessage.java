@@ -11,18 +11,13 @@ import java.util.Map;
 public class SubmissionPhaseMessage {
 
     private List<Card> cards;
-    private Map<User, Boolean> readyUsers;
 
-    public SubmissionPhaseMessage(List<Card> cards, Map<User, Boolean> readyUsers) {
+    public SubmissionPhaseMessage(List<Card> cards) {
         this.cards = cards;
-        this.readyUsers = readyUsers;
     }
 
     public List<Card> getCards() {
         return cards;
     }
 
-    public Map<User, Boolean> getReadyUsers() {
-        return readyUsers;
-    }
 }

@@ -28,6 +28,9 @@ public class VotingService {
     private PhaseService phaseService;
 
     @Autowired
+    private UserService userService;
+
+    @Autowired
     private WebSocketPrincipalHolder principalHolder;
 
     @Autowired
@@ -40,17 +43,20 @@ public class VotingService {
     public synchronized void castVotes(List<String> themeIds) {
         String username = principalHolder.getPrincipal().getName();
         User user = userDAO.getUser(username).get();
+
         themeIds.forEach(id -> {
             Vote vote = new Vote(user);
             themeDAO.addVoteToTheme(id, vote);
         });
 
+        user.setReady(true);
+        this.userService.sendUsers();
+
         // check if all votes are cast
-        int userCount = userDAO.getUserCount();
-        if (themeDAO.haveNVotesBeenCast(userCount * 3)) {
+        if (userDAO.areAllReady()) {
             this.phaseService.advancePhase();
         } else {
-            this.notificationService.notifyClient(new Notification(user.getFullName() + " Finished Voting"));
+            this.notificationService.notifyClient(new Notification(user.getFullName() + " finished voting"));
         }
     }
 }

@@ -20,15 +20,11 @@ public class ResetController {
     @Autowired
     private UserDAO userDAO;
 
-    @Autowired
-    private SubmissionPhaseDAO submissionPhaseDAO;
-
     @MessageMapping("/reset")
     public void reset() {
         cardDAO.reset();
         phaseDAO.reset();
         themeDAO.reset();
         userDAO.reset();
-        submissionPhaseDAO.reset();
     }
 }

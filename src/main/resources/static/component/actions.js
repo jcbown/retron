@@ -19,7 +19,7 @@ export default {
                     <theme :theme="theme"/>
                 </div>
                 <div class="col">
-                    <span>Voters: </span>
+                    <span class="mr-2"><strong>Voters: </strong></span>
                     <span v-for="vote in theme.votes" class="pr-2">
                         <userBadge :fullName="vote.user.fullName" :colour="vote.user.colour"/>
                     </span>

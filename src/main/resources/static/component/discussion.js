@@ -20,7 +20,7 @@ export default {
                             <button @click="previousOwner" class="btn btn-secondary">Previous</button>
                             <button @click="nextOwner" class="btn btn-secondary">Next</button> 
                         </span>
-                        <button disabled @click="nextPhase" class="btn btn-primary btn-sm">Next Phase</button>
+                        <button :disabled="!isLastOwner" @click="nextPhase" class="btn btn-primary btn-sm">Next Phase</button>
                     </span>
                 </div>
             </div>
@@ -42,6 +42,11 @@ export default {
     data: function () {
         return {
             cardTypes: []
+        }
+    },
+    computed: {
+        isLastOwner: function() {
+            return this.cardsByOwner.length === this.currentOwnerIndex + 1;
         }
     },
     created: function () {

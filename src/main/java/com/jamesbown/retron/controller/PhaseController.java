@@ -33,7 +33,7 @@ public class PhaseController {
         phaseService.advancePhase();
     }
 
-    @MessageMapping("/submission/ready")
+    @MessageMapping("/submission/userReady")
     public void submissionUserReady() {
         submissionService.userReady();
     }

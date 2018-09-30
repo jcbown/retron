@@ -10,12 +10,14 @@ public class User {
     private String id;
     private String fullName;
     private String colour;
+    private boolean ready;
 
     @JsonCreator
     public User(@JsonProperty("fullName") String fullName, @JsonProperty("colour") String colour) {
         this.id = fullName;
         this.fullName = fullName;
         this.colour = colour;
+        this.ready = false;
     }
 
     public String getId() {
@@ -36,6 +38,14 @@ public class User {
 
     public void setColour(String colour) {
         this.colour = colour;
+    }
+
+    public boolean isReady() {
+        return ready;
+    }
+
+    public void setReady(boolean ready) {
+        this.ready = ready;
     }
 
     @Override

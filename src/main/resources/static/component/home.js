@@ -48,10 +48,10 @@ export default {
                         </div>
 
 
-                        <submission v-if="this.currentPhase == 'SUBMISSION'" :details="submissionPhase"></submission>
+                        <submission v-if="this.currentPhase == 'SUBMISSION'" :details="submissionPhase" :users="users"></submission>
                         <discussion v-if="this.currentPhase == 'DISCUSSION'" :cardsByOwner="discussionPhase.cardsByOwner" :currentOwnerIndex="discussionPhase.currentOwner"></discussion>
                         <grouping v-if="this.currentPhase == 'GROUPING'" :details="groupingPhase"></grouping>
-                        <voting v-if="this.currentPhase == 'VOTING'" :themes="votingPhase.themes"></voting>
+                        <voting v-if="this.currentPhase == 'VOTING'" :themes="votingPhase.themes" :users="users"></voting>
                         <actions v-if="this.currentPhase == 'ACTIONS'" :actionThemes="actionsPhase.actionThemes" :otherThemes="actionsPhase.otherThemes"></actions>
 
                     </div>
@@ -108,6 +108,9 @@ export default {
                 this.displayActionsPhase(msg);
             }.bind(this));
 
+            // Subscribe to User updates
+            stompClient.subscribe('/topic/user/update', this.onUsersUpdated);
+
             // Subscribe to Notifications
             stompClient.subscribe('/topic/notification', this.showNotification);
 
@@ -116,6 +119,8 @@ export default {
                 fullName: this.user.fullName,
                 colour: this.user.colour
             };
+            Vue.prototype.$currentUser = user;
+
             stompClient.send("/app/user/join", {user: user.fullName}, JSON.stringify(user)); //TODO remove header?
         }.bind(this));
     },
@@ -141,6 +146,7 @@ export default {
                 VOTING: "Voting",
                 ACTIONS: "Actions"
             },
+            users: [],
             notification: null
         }
     },
@@ -174,6 +180,7 @@ export default {
             let r = confirm("Only the leader of the retrospective should perform this action.\nAre you sure you know what you are doing? This cannot be undone!");
             if (r === true) {
                 this.$stompClient.send("/app/reset");
+                this.reloadPage();
             }
         },
         showNotification: function (msg) {
@@ -200,6 +207,9 @@ export default {
             if (r === true) {
                 this.$stompClient.send("/app/advance-phase");
             }
+        },
+        onUsersUpdated: function(msg) {
+            this.users = JSON.parse(msg.body);
         }
     }
 }

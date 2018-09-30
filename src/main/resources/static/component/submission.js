@@ -1,37 +1,49 @@
 import * as Utils from "/utils.js"
+import UserBadge from "./userBadge.js"
 
 export default {
-    components: {},
+    components: {
+        UserBadge
+    },
     // language=HTML
     template: `
-        <div class="row">
-            <div v-for="cardType in cardTypes" class="col">
-                <h3>{{cardType}}</h3>
-                <div v-for="card in getCards(cardType)" class="card mb-2" @dblclick="editCard(card)">
-                    <div class="card-body">
-                        <input ref="cardEditInput" v-if="isEditing(card)" @keyup.enter="saveCard(card, $event)" @blur="saveCard(card, $event)"
-                               placeholder="Enter some text" type="text" :value="card.text" size="30">
-                        <span v-else>{{card.text}}</span>
-                        <span class="float-right" width="20rem">
-                            <a href="javascript:void(0)" @click="editCard(card)">
-                                <span class="oi oi-pencil" title="Edit Card" aria-hidden="true"></span>
-                            </a>
-                            <a href="javascript:void(0)" @click="deleteCard(card)">
-                                <span class="oi oi-trash" title="Delete Card" aria-hidden="true"></span>
-                            </a>
-                        </span>
-                        
-                    </div>
+        <div>
+            <div class="row">
+                <div class="col">
+                    <strong>Users:</strong>
+                    <userBadge v-for="user in users" :key="user.id" :fullName="user.fullName" :colour="user.colour" :done="user.ready"/>
+                    <button :disabled="submitted" @click="sendReady" class="btn btn-primary float-right">Submit Cards</button>
                 </div>
-                <button type="button" class="btn addCardBtn"
-                        data-toggle="tooltip" data-placement="right"
-                        :class="cardButtonClasses"
-                        @click="createCard(cardType)">Add Card
-                </button>
+            </div>
+            <div class="row">
+                <div v-for="cardType in cardTypes" class="col">
+                    <h3>{{cardType}}</h3>
+                    <div v-for="card in getCards(cardType)" class="card mb-2" @dblclick="editCard(card)">
+                        <div class="card-body">
+                            <input ref="cardEditInput" v-if="isEditing(card)" @keyup.enter="saveCard(card, $event)" @blur="saveCard(card, $event)"
+                                   placeholder="Enter some text" type="text" :value="card.text" size="30">
+                            <span v-else>{{card.text}}</span>
+                            <span class="float-right" width="20rem">
+                                <a href="javascript:void(0)" @click="editCard(card)">
+                                    <span class="oi oi-pencil" title="Edit Card" aria-hidden="true"></span>
+                                </a>
+                                <a href="javascript:void(0)" @click="deleteCard(card)">
+                                    <span class="oi oi-trash" title="Delete Card" aria-hidden="true"></span>
+                                </a>
+                            </span>
+                            
+                        </div>
+                    </div>
+                    <button type="button" class="btn addCardBtn"
+                            data-toggle="tooltip" data-placement="right"
+                            :class="cardButtonClasses"
+                            @click="createCard(cardType)">Add Card
+                    </button>
+                </div>
             </div>
         </div>
     `,
-    props: ["details"],
+    props: ["details", "users"],
     data: function () {
         return {
             cards: [],
@@ -67,19 +79,23 @@ export default {
         cardsError: function() { return this.cards.length >=7; },
         cardButtonClasses: function () {
             return {
-                'btn-primary': this.cardsNormal,
+                'btn-secondary': this.cardsNormal,
                 'btn-warning': this.cardsWarning,
                 'btn-danger': this.cardsError
             }
         },
         cardButtonTooltip: function() {
             if (this.cardsWarning) {
-                return "That's probably enough.";
+                return "That's probably enough";
             } else if (this.cardsError) {
-                return "We don't want to be here all day. Consider deleting some cards.";
+                return "Consider deleting some cards";
             } else {
-                return null;
+                return "";
             }
+        },
+        submitted: function() {
+            let currentUser = _.find(this.users, u => u.fullName === this.$currentUser.fullName);
+            return currentUser ? currentUser.ready : true;
         }
     },
     methods: {
@@ -120,6 +136,9 @@ export default {
         },
         getCards: function (columnName) {
             return this.cards.filter(c => c.cardType === columnName);
+        },
+        sendReady: function() {
+            this.$stompClient.send("/app/submission/userReady");
         }
     }
 }

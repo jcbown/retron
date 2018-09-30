@@ -38,27 +38,32 @@ public class PhaseService {
     private PhaseDAO phaseDAO;
 
     @Autowired
-    private UserDAO userDAO;
+    private UserService userService;
 
     @Autowired
-    private SubmissionPhaseDAO submissionPhaseDAO;
-
+    private UserDAO userDAO;
 
     public void advancePhase() {
         switch (phaseDAO.getCurrentPhase()) {
             case SUBMISSION:
                 phaseDAO.setCurrentPhase(Phase.DISCUSSION);
+                userDAO.markAllNotReady();
+                userService.sendUsers();
                 List<OwnedCards> cardsByOwner = cardDAO.getCardsByOwner();
                 DiscussionPhaseMessage dpm = new DiscussionPhaseMessage(cardsByOwner, cardDAO.getCurrentCardOwnerIndex());
                 this.template.convertAndSend("/topic/phase/discussion", dpm);
                 break;
             case DISCUSSION:
                 phaseDAO.setCurrentPhase(Phase.GROUPING);
+                userDAO.markAllNotReady();
+                userService.sendUsers();
                 GroupingPhaseMessage gpm = new GroupingPhaseMessage(cardDAO.getCards());
                 this.template.convertAndSend("/topic/phase/grouping", gpm);
                 break;
             case GROUPING:
                 phaseDAO.setCurrentPhase(Phase.VOTING);
+                userDAO.markAllNotReady();
+                userService.sendUsers();
                 List<Theme> themes = cardDAO.createThemesFromCards();
                 themes.forEach(t -> themeDAO.createTheme(t));
                 VotingPhaseMessage vpm = new VotingPhaseMessage(themeDAO.getThemes());
@@ -66,6 +71,8 @@ public class PhaseService {
                 break;
             case VOTING:
                 phaseDAO.setCurrentPhase(Phase.ACTIONS);
+                userDAO.markAllNotReady();
+                userService.sendUsers();
                 ActionsPhaseMessage apm = themeDAO.decideOnActionThemes();
                 this.template.convertAndSend("/topic/phase/actions", apm);
                 break;
@@ -80,7 +87,7 @@ public class PhaseService {
         User user = userDAO.getUser(username).get();
         switch (phaseDAO.getCurrentPhase()) {
             case SUBMISSION:
-                SubmissionPhaseMessage spm = new SubmissionPhaseMessage(cardDAO.getCardsForOwner(user), getReadyUsers());
+                SubmissionPhaseMessage spm = new SubmissionPhaseMessage(cardDAO.getCardsForOwner(user));
                 this.template.convertAndSendToUser(username, "/topic/phase/submission", spm);
                 break;
             case DISCUSSION:
@@ -102,13 +109,4 @@ public class PhaseService {
         }
     }
 
-    private Map<User, Boolean> getReadyUsers() {
-        Map<User, Boolean> result = new HashMap<>();
-        List<User> users = this.userDAO.getUsers();
-        users.forEach(u -> result.put(u, false));
-        this.submissionPhaseDAO.getReadyUsers().forEach(
-                u -> result.put(u, true)
-        );
-        return result;
-    }
 }

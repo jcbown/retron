@@ -1,9 +1,11 @@
 import Theme from "./theme.js"
+import UserBadge from "./userBadge.js"
 
 
 export default {
     components: {
-        Theme
+        Theme,
+        UserBadge
     },
     // language=HTML
     template: `
@@ -12,11 +14,11 @@ export default {
                 <div class="col">
                     <div>
                         <strong>Voters:</strong>
-                        <!-- Put user gutter here -->
+                        <userBadge v-for="user in users" :key="user.id" :fullName="user.fullName" :colour="user.colour" :done="user.ready"/>
                     </div>
                     <div class="float-right">
-                        <span><strong>Votes Remaining:</strong> {{totalVotesRemaining}}</span>
-                        <button v-if="!voted && totalVotesRemaining === 0" @click="sendReady" class="btn btn-primary btn-sm">Submit Votes</button>
+                        <span class="mr-3"><strong>Votes Remaining:</strong> <code>{{totalVotesRemaining}}</code></span>
+                        <button :disabled="voted || totalVotesRemaining !== 0" @click="sendReady" class="btn btn-primary">Submit Votes</button>
                     </div>
                 </div>
             </div>
@@ -29,16 +31,19 @@ export default {
             </div>
         </div>
     `,
-    props: ["themes"],
+    props: ["themes", "users"],
     data: function () {
         return {
-            cardTypes: [],
-            voted: false
+            cardTypes: []
         }
     },
     computed: {
         totalVotesRemaining: function () {
             return 3 - this.themes.map(t => t.votesCast).reduce((sum, cur) => sum + cur, 0);
+        },
+        voted: function() {
+            let currentUser = _.find(this.users, u => u.fullName === this.$currentUser.fullName);
+            return currentUser ? currentUser.ready : true;
         }
     },
     created: function () {

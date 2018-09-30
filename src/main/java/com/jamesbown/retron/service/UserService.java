@@ -44,6 +44,11 @@ public class UserService {
             userDAO.createUser(user);
             notificationService.notifyClient(new Notification(user.getFullName() + " has joined the game!"));
         }
+        this.sendUsers();
         phaseService.sendCurrentPhaseToUser();
+    }
+
+    public void sendUsers() {
+        this.template.convertAndSend("/topic/user/update", userDAO.getUsers());
     }
 }

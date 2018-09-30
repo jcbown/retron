@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Repository
 public class UserDAO {
@@ -38,4 +39,14 @@ public class UserDAO {
     }
 
 
+    public synchronized boolean areAllReady() {
+        return this.users.stream()
+                .map(User::isReady)
+                .reduce(Boolean::logicalAnd)
+                .get();
+    }
+
+    public synchronized void markAllNotReady() {
+        this.users.forEach(u -> u.setReady(false));
+    }
 }
