@@ -54,12 +54,12 @@ public class PhaseService {
                 this.template.convertAndSend("/topic/phase/discussion", dpm);
                 break;
             case DISCUSSION:
-                phaseDAO.setCurrentPhase(Phase.GROUPING);
-                userDAO.markAllNotReady();
-                userService.sendUsers();
-                GroupingPhaseMessage gpm = new GroupingPhaseMessage(cardDAO.getCards());
-                this.template.convertAndSend("/topic/phase/grouping", gpm);
-                break;
+//                phaseDAO.setCurrentPhase(Phase.GROUPING);
+//                userDAO.markAllNotReady();
+//                userService.sendUsers();
+//                GroupingPhaseMessage gpm = new GroupingPhaseMessage(cardDAO.getCards());
+//                this.template.convertAndSend("/topic/phase/grouping", gpm);
+//                break;
             case GROUPING:
                 phaseDAO.setCurrentPhase(Phase.VOTING);
                 userDAO.markAllNotReady();
