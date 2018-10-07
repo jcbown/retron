@@ -61,7 +61,11 @@ html, body, .fullHeight {
 
 .user-badge-done {
     position: absolute;
-    top: 6px;
-    right: -11px;
-    color: forestgreen;
+    top: -3px;
+    right: -8px;
+    color: darkgrey;
+}
+
+.user-badge-transparent {
+    opacity: 0.3;
 }

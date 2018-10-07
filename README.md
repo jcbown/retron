@@ -33,5 +33,5 @@ Port 80 must be open on deployment machine
 
 On deployment machine
 ```
-docker run -p 80:8080 retron:latest
+docker run -d -p 80:8080 retron:latest
 ```

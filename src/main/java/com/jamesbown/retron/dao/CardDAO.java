@@ -92,4 +92,8 @@ public class CardDAO {
     public synchronized void deleteCard(UUID uuid) {
         this.cards.remove(uuid);
     }
+
+    public void logCards() {
+        this.cards.values().forEach(System.out::println);
+    }
 }

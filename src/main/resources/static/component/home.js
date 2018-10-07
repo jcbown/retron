@@ -134,10 +134,10 @@ export default {
             actionsPhase: null,
             phaseHelp: {
                 SUBMISSION: "Add cards to the board with your thoughts for this retrospective. Double click on a card to edit.",
-                DISCUSSION: "You can use the left and right arrow keys to navigate through users.",
+                DISCUSSION: "Discuss each team member's thoughts in turn.",
                 GROUPING: "Click on cards to group them into similar themes.",
-                VOTING: "Click on a theme to vote for it. You have three votes available. You can vote for the same theme more than once.",
-                ACTIONS: "Decide on actions for the themes with the most votes."
+                VOTING: "Click on a theme multiple times to assign more than one vote. Keep clicking to reset to zero.",
+                ACTIONS: "Decide on actions to take for the themes with the most votes."
             },
             phaseName: {
                 SUBMISSION: "Submission",

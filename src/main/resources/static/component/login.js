@@ -7,7 +7,7 @@ export default {
     // language=HTML
     template: `
         <div class="container">
-            <div class="row">
+            <div class="row mt-3">
                 <div class="col">
                     <h2>Retron</h2>
                     <form onsubmit="return false;">

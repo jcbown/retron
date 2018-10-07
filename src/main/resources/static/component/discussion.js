@@ -12,8 +12,9 @@ export default {
             <div class="row mb-4">
                 <div class="col">
                     <span>
-                        <userBadge v-for="user in getSeenUsers()" :fullName="user.fullName" :colour="user.colour" :done="true" class="mr-4"/>
-                        <userBadge v-for="user in getUnseenUsers()" :fullName="user.fullName" :colour="user.colour" :done="false" class="mr-4"/>
+                        <span>Discuss Cards: </span>
+                        <userBadge v-for="user in getSeenUsers()" :fullName="user.fullName" :colour="user.colour" :done="true"/>
+                        <userBadge v-for="user in getUnseenUsers()" :fullName="user.fullName" :colour="user.colour" :done="false"/>
                     </span>
                     <span class="float-right">
                         <span class="mr-1">
@@ -27,10 +28,12 @@ export default {
             <div class="row">
                 <div v-for="cardType in cardTypes" class="col">
                     <h3>{{cardType}}</h3>
-                    <card v-for="card in getHighlightedCards(cardType)" :key="card.id" :card="card" class="bg-secondary text-white"/>
+                    <card v-for="card in getHighlightedCards(cardType)" :key="card.id" :card="card" class="bg-light"/>
                 </div>
             </div>
+            <code>Current User</code>
             <hr/>
+            <code>Other Users</code>
             <div class="row">
                 <div v-for="cardType in cardTypes" class="col">
                     <card v-for="card in getOtherCards(cardType)" :key="card.id" :card="card"/>

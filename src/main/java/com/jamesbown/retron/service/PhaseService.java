@@ -47,6 +47,7 @@ public class PhaseService {
         switch (phaseDAO.getCurrentPhase()) {
             case SUBMISSION:
                 phaseDAO.setCurrentPhase(Phase.DISCUSSION);
+                cardDAO.logCards();
                 userDAO.markAllNotReady();
                 userService.sendUsers();
                 List<OwnedCards> cardsByOwner = cardDAO.getCardsByOwner();

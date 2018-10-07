@@ -10,7 +10,7 @@ export default {
         <div>
             <div class="row">
                 <div class="col">
-                    <strong>Users:</strong>
+                    <strong>Submitting Cards: </strong>
                     <userBadge v-for="user in users" :key="user.id" :fullName="user.fullName" :colour="user.colour" :done="user.ready"/>
                     <button :disabled="submitted" @click="sendReady" class="btn btn-primary float-right">Submit Cards</button>
                 </div>
@@ -24,12 +24,12 @@ export default {
                                    placeholder="Enter some text" type="text" :value="card.text" size="30">
                             <span v-else>{{card.text}}</span>
                             <span class="float-right" width="20rem">
-                                <a href="javascript:void(0)" @click="editCard(card)">
+                                <button :disabled="submitted" class="btn btn-link pl-0 pr-0" @click="editCard(card)">
                                     <span class="oi oi-pencil" title="Edit Card" aria-hidden="true"></span>
-                                </a>
-                                <a href="javascript:void(0)" @click="deleteCard(card)">
+                                </button>
+                                <button :disabled="submitted" class="btn btn-link pl-0 pr-0" @click="deleteCard(card)">
                                     <span class="oi oi-trash" title="Delete Card" aria-hidden="true"></span>
-                                </a>
+                                </button>
                             </span>
                             
                         </div>
@@ -37,6 +37,7 @@ export default {
                     <button type="button" class="btn addCardBtn"
                             data-toggle="tooltip" data-placement="right"
                             :class="cardButtonClasses"
+                            :disabled="submitted"
                             @click="createCard(cardType)">Add Card
                     </button>
                 </div>
@@ -110,17 +111,23 @@ export default {
             this.editCard(card);
         },
         editCard: function(card) {
-            this.uuidCurrentlyEditing = card.uuid;
+            if (!this.submitted) {
+                this.uuidCurrentlyEditing = card.uuid;
+            }
         },
         deleteCard: function(card) {
-            this.$stompClient.send("/app/card/delete", {}, JSON.stringify(card));
+            if (!this.submitted) {
+                this.$stompClient.send("/app/card/delete", {}, JSON.stringify(card));
+            }
         },
         saveCard: function(card, e) {
-            let text = $(e.currentTarget).val();
-            card.text = text;
-            this.uuidCurrentlyEditing = null;
-            this.$stompClient.send("/app/card/update", {}, JSON.stringify(card));
-            this.uuidCurrentlyEditing = null;
+            if (!this.submitted) {
+                let text = $(e.currentTarget).val();
+                card.text = text;
+                this.uuidCurrentlyEditing = null;
+                this.$stompClient.send("/app/card/update", {}, JSON.stringify(card));
+                this.uuidCurrentlyEditing = null;
+            }
         },
         isEditing: function(card) {
             return this.uuidCurrentlyEditing === card.uuid;

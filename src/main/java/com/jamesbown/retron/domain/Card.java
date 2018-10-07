@@ -39,4 +39,13 @@ public class Card {
     public String getCardType() {
         return cardType;
     }
+
+    @Override
+    public String toString() {
+        return "Card{" +
+                "cardType='" + cardType + '\'' +
+                ", user=" + user +
+                ", text='" + text + '\'' +
+                '}';
+    }
 }
