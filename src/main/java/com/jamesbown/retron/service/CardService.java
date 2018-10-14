@@ -31,7 +31,7 @@ public class CardService {
 
     public void createCard(Card card) {
         String username = principalHolder.getPrincipal().getName();
-        Card cardWithOwner = new Card(card.getUuid(), card.getCardType(), card.getText(), userDAO.getUser(username).get());
+        Card cardWithOwner = new Card(card.getUuid(), card.getCardType(), card.getText(), card.getAllowVoting(), userDAO.getUser(username).get());
         cardDAO.createCard(cardWithOwner);
         this.template.convertAndSendToUser(username,"/topic/card/create", cardWithOwner);
     }

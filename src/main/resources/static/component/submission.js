@@ -20,8 +20,10 @@ export default {
                     <h3>{{cardType}}</h3>
                     <div v-for="card in getCards(cardType)" class="card mb-2" @dblclick="editCard(card)">
                         <div class="card-body">
-                            <input v-model="card.text" ref="cardEditInput" v-if="isEditing(card)" @keyup.enter="saveCard(card, $event)" @blur="saveCard(card, $event)"
-                                   placeholder="Enter some text" type="text" size="30">
+                            <div v-if="isEditing(card)">
+                                <input v-model="card.text" ref="cardEditInput" @keyup.enter="saveCard(card, $event)" @blur="saveCard(card, $event)"
+                                       placeholder="Enter some text" type="text" size="30">
+                            </div>
                             <span v-else>{{card.text}}</span>
                             <span class="float-right" width="20rem">
                                 <button :disabled="submitted" class="btn btn-link pl-0 pr-0" @click="editCard(card)">
@@ -31,13 +33,19 @@ export default {
                                     <span class="oi oi-trash" title="Delete Card" aria-hidden="true"></span>
                                 </button>
                             </span>
-                            
+                            <div>
+                                <small>
+                                    <input type="checkbox" :id="card.uuid" v-model="card.allowVoting" @change="saveCard(card, $event)"
+                                        title="Permits other users to vote for this card">
+                                    <label :for="card.uuid" class="text-muted">allow voting</label>
+                                </small>
+                            </div>
                         </div>
                     </div>
                     <button type="button" class="btn addCardBtn"
                             data-toggle="tooltip" data-placement="right"
                             :class="cardButtonClasses"
-                            :disabled="submitted"
+                            :disabled="submitted || uuidCurrentlyEditing !== null"
                             @click="createCard(cardType)">Add Card
                     </button>
                 </div>
@@ -105,7 +113,8 @@ export default {
             let card = {
                 uuid: uuid,
                 cardType: cardType,
-                text: ""
+                text: "",
+                allowVoting: true
             };
             this.$stompClient.send("/app/card/create", {}, JSON.stringify(card));
             this.editCard(card);

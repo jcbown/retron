@@ -59,7 +59,9 @@ public class CardDAO {
     public synchronized List<Theme> createThemesFromCards() {
         LinkedList<Theme> themes = new LinkedList<>();
         synchronized (cards) {
-            cards.values().forEach(c -> {
+            cards.values().stream()
+                .filter(Card::getAllowVoting)
+                .forEach(c -> {
                 Theme t = new Theme(Arrays.asList(c));
                 themes.add(t);
             });
