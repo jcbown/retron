@@ -20,8 +20,8 @@ export default {
                     <h3>{{cardType}}</h3>
                     <div v-for="card in getCards(cardType)" class="card mb-2" @dblclick="editCard(card)">
                         <div class="card-body">
-                            <input ref="cardEditInput" v-if="isEditing(card)" @keyup.enter="saveCard(card, $event)" @blur="saveCard(card, $event)"
-                                   placeholder="Enter some text" type="text" :value="card.text" size="30">
+                            <input v-model="card.text" ref="cardEditInput" v-if="isEditing(card)" @keyup.enter="saveCard(card, $event)" @blur="saveCard(card, $event)"
+                                   placeholder="Enter some text" type="text" size="30">
                             <span v-else>{{card.text}}</span>
                             <span class="float-right" width="20rem">
                                 <button :disabled="submitted" class="btn btn-link pl-0 pr-0" @click="editCard(card)">
@@ -122,8 +122,6 @@ export default {
         },
         saveCard: function(card, e) {
             if (!this.submitted) {
-                let text = $(e.currentTarget).val();
-                card.text = text;
                 this.uuidCurrentlyEditing = null;
                 this.$stompClient.send("/app/card/update", {}, JSON.stringify(card));
                 this.uuidCurrentlyEditing = null;
