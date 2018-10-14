@@ -58,7 +58,7 @@ export default {
                 </div>
             </div>
             <footer id="home-footer">
-                <div class="container">
+                <div class="container-fluid">
                     <span class="text-muted"><strong>{{ getPhaseName() }}</strong> - {{ getPhaseHelp() }}</span>
                 </div>
             </footer>
@@ -133,7 +133,7 @@ export default {
             votingPhase: null,
             actionsPhase: null,
             phaseHelp: {
-                SUBMISSION: "Add cards to the board with your thoughts for this retrospective. Double click on a card to edit.",
+                SUBMISSION: "Add cards to the board with your thoughts for this retrospective. If you don't want any actions to result from your card, then disable voting.",
                 DISCUSSION: "Discuss each team member's thoughts in turn.",
                 GROUPING: "Click on cards to group them into similar themes.",
                 VOTING: "Click on a theme multiple times to assign more than one vote. Keep clicking to reset to zero.",

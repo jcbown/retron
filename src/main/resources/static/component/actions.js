@@ -16,7 +16,7 @@ export default {
             </div>
             <div class="row align-items-center" v-for="theme in actionThemes">
                 <div class="col">
-                    <theme :theme="theme"/>
+                    <theme :theme="theme" showCardTypes="true"/>
                 </div>
                 <div class="col">
                     <span class="mr-2"><strong>Voters: </strong></span>
