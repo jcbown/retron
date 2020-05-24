@@ -30,11 +30,12 @@ export default {
                     <h4>Other Themes</h4>
                 </div>
             </div>
-            <div class="row align-items-center muted-themes" v-for="theme in otherThemes">
+            <div class="row align-items-center" v-for="theme in otherThemes">
                 <div class="col">
-                    <theme :theme="theme"/>
+                    <theme :theme="theme" showCardTypes="true"/>
                 </div>
                 <div class="col">
+                    <span class="mr-2"><strong>Voters: </strong></span>
                     <span v-for="vote in theme.votes" class="pr-2">
                         <userBadge :fullName="vote.user.fullName" :colour="vote.user.colour"/>
                     </span>
